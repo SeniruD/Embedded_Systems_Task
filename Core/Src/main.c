@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "string.h"
+#include "stdio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -117,6 +118,7 @@ int main(void)
 //	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7);
 //	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);
 //	  HAL_Delay(1000);
+  printf("Hello World\n");
   }
   /* USER CODE END 3 */
 }
