@@ -47,9 +47,9 @@ UART_HandleTypeDef huart3;
 PCD_HandleTypeDef hpcd_USB_OTG_FS;
 
 /* USER CODE BEGIN PV */
-int green_led_state = 0;
-int blue_led_state = 0;
-int red_led_state = 0;
+//int green_led_state = 0;
+//int blue_led_state = 0;
+//int red_led_state = 0;
 
 
 /* USER CODE END PV */
@@ -112,9 +112,9 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, green_led_state);
-	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, blue_led_state);
-	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, red_led_state);
+//	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, green_led_state);
+//	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, blue_led_state);
+//	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, red_led_state);
 //	  HAL_Delay(1000);
   }
   /* USER CODE END 3 */
@@ -299,33 +299,33 @@ const char *LedControlCgiHandler(int index, int numParams, char *pcParam[], char
       {
         if(strcmp(pcValue[i], "ON") == 0)
         {
-          green_led_state = 1;
+        	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET); // Turn On Greed Led
         }
         else
         {
-          green_led_state = 0;
+        	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET); // Turn Off Greed Led
         }
       }
       else if(strcmp(pcParam[i], "blue") == 0)
       {
         if(strcmp(pcValue[i], "ON") == 0)
         {
-          blue_led_state = 1;
+        	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET); // Turn On Blue Led
         }
         else
         {
-          blue_led_state = 0;
+        	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET); // Turn Off Blue Led
         }
       }
       else if(strcmp(pcParam[i], "red") == 0)
       {
         if(strcmp(pcValue[i], "ON") == 0)
         {
-          red_led_state = 1;
+        	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET); // Turn On Red Led
         }
         else
         {
-          red_led_state = 0;
+        	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET); // Turn Off Red Led
         }
       }
     }
