@@ -23,6 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "lwip/apps/httpd.h"
+#include "string.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -46,6 +47,10 @@ UART_HandleTypeDef huart3;
 PCD_HandleTypeDef hpcd_USB_OTG_FS;
 
 /* USER CODE BEGIN PV */
+int green_led_state = 0;
+int blue_led_state = 0;
+int red_led_state = 0;
+
 
 /* USER CODE END PV */
 
@@ -55,7 +60,7 @@ static void MX_GPIO_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_USB_OTG_FS_PCD_Init(void);
 /* USER CODE BEGIN PFP */
-
+const char *LedControlCgiHandler(int iIndex, int iNumParams, char *pcParam[], char *pcValue[]);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -70,7 +75,7 @@ static void MX_USB_OTG_FS_PCD_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+	  tCGI LED_CGI = {"/LEDControl.cgi", LedControlCgiHandler};
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -96,6 +101,7 @@ int main(void)
   MX_LWIP_Init();
   /* USER CODE BEGIN 2 */
   httpd_init();
+  http_set_cgi_handlers(&LED_CGI, 1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -106,11 +112,10 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-//	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
-//	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7);
-//	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);
+	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, green_led_state);
+	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, blue_led_state);
+	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, red_led_state);
 //	  HAL_Delay(1000);
-//  printf("Hello World\n");
   }
   /* USER CODE END 3 */
 }
@@ -284,7 +289,50 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+const char *LedControlCgiHandler(int index, int numParams, char *pcParam[], char *pcValue[])
+{
+  if(index == 0)
+  {
+    for(int i=0; i < numParams; i++)
+    {
+      if(strcmp(pcParam[i], "green") == 0)
+      {
+        if(strcmp(pcValue[i], "ON") == 0)
+        {
+          green_led_state = 1;
+        }
+        else
+        {
+          green_led_state = 0;
+        }
+      }
+      else if(strcmp(pcParam[i], "blue") == 0)
+      {
+        if(strcmp(pcValue[i], "ON") == 0)
+        {
+          blue_led_state = 1;
+        }
+        else
+        {
+          blue_led_state = 0;
+        }
+      }
+      else if(strcmp(pcParam[i], "red") == 0)
+      {
+        if(strcmp(pcValue[i], "ON") == 0)
+        {
+          red_led_state = 1;
+        }
+        else
+        {
+          red_led_state = 0;
+        }
+      }
+    }
+  }
 
+  return "/index.html";
+}
 /* USER CODE END 4 */
 
 /**
