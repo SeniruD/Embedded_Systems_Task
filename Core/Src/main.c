@@ -25,6 +25,7 @@
 #include "lwip/apps/httpd.h"
 #include "http_ssi.h"
 #include "tcpClientRAW.h"
+//#include "http_client.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -102,6 +103,7 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim10);
   http_server_init();
   tcp_client_init();
+//  http_client_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
