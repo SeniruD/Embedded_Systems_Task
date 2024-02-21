@@ -24,6 +24,7 @@
 /* USER CODE BEGIN Includes */
 #include "lwip/apps/httpd.h"
 #include "string.h"
+#include "stdbool.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -33,7 +34,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define numSSItags 3
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -47,10 +48,11 @@ UART_HandleTypeDef huart3;
 PCD_HandleTypeDef hpcd_USB_OTG_FS;
 
 /* USER CODE BEGIN PV */
-//int green_led_state = 0;
-//int blue_led_state = 0;
-//int red_led_state = 0;
+bool green_led_state = false;
+bool blue_led_state = false;
+bool red_led_state = false;
 
+char const *theSSItags[numSSItags] = { "tag1", "tag2", "tag3"};
 
 /* USER CODE END PV */
 
@@ -61,6 +63,7 @@ static void MX_USART3_UART_Init(void);
 static void MX_USB_OTG_FS_PCD_Init(void);
 /* USER CODE BEGIN PFP */
 const char *LedControlCgiHandler(int iIndex, int iNumParams, char *pcParam[], char *pcValue[]);
+u16_t mySSIHandler(int iIndex, char *pcInsert, int iInsertLen);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -102,6 +105,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   httpd_init();
   http_set_cgi_handlers(&LED_CGI, 1);
+  http_set_ssi_handler(mySSIHandler, (char const**) theSSItags, numSSItags);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -300,10 +304,12 @@ const char *LedControlCgiHandler(int index, int numParams, char *pcParam[], char
         if(strcmp(pcValue[i], "ON") == 0)
         {
         	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET); // Turn On Greed Led
+        	green_led_state = true;
         }
         else
         {
         	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET); // Turn Off Greed Led
+        	green_led_state = false;
         }
       }
       else if(strcmp(pcParam[i], "blue") == 0)
@@ -311,10 +317,12 @@ const char *LedControlCgiHandler(int index, int numParams, char *pcParam[], char
         if(strcmp(pcValue[i], "ON") == 0)
         {
         	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET); // Turn On Blue Led
+        	blue_led_state = true;
         }
         else
         {
         	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET); // Turn Off Blue Led
+        	blue_led_state = false;
         }
       }
       else if(strcmp(pcParam[i], "red") == 0)
@@ -322,16 +330,83 @@ const char *LedControlCgiHandler(int index, int numParams, char *pcParam[], char
         if(strcmp(pcValue[i], "ON") == 0)
         {
         	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET); // Turn On Red Led
+        	red_led_state = true;
         }
         else
         {
         	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET); // Turn Off Red Led
+        	red_led_state = false;
         }
       }
     }
   }
 
-  return "/index.html";
+  return "/index.shtml";
+}
+
+u16_t mySSIHandler(int iIndex, char *pcInsert, int iInsertLen) {
+
+    if (iIndex == 0) {
+
+        if (green_led_state == false) {
+
+            char myStr1[] ="<option>ON<option selected>OFF";
+            strcpy(pcInsert, myStr1);
+            return strlen(myStr1);
+        }
+
+        else if (green_led_state == true) {
+
+            char myStr1[] ="<option selected>ON<option>OFF";
+            strcpy(pcInsert, myStr1);
+            return strlen(myStr1);
+
+        }
+
+    }
+
+    else if (iIndex == 1)
+
+    {
+        if (blue_led_state == false) {
+            char myStr2[] = "<option>ON<option selected>OFF";
+            strcpy(pcInsert, myStr2);
+            return strlen(myStr2);
+        }
+
+        else if (blue_led_state == true) {
+
+            char myStr2[] ="<option selected>ON<option>OFF";
+            strcpy(pcInsert, myStr2);
+            return strlen(myStr2);
+
+        }
+
+    }
+    else if (iIndex == 2)
+
+    {
+        if (red_led_state == false) {
+            char myStr2[] = "<option>ON<option selected>OFF";
+            strcpy(pcInsert, myStr2);
+
+            return strlen(myStr2);
+        }
+
+        else if (red_led_state == true) {
+
+            char myStr2[] ="<option selected>ON<option>OFF";
+            strcpy(pcInsert, myStr2);
+
+            return strlen(myStr2);
+
+        }
+
+    }
+
+
+    return 0;
+
 }
 /* USER CODE END 4 */
 
