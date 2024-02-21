@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensor Data</title>
+</head>
+<body>
+    <h1>Sensor Data</h1>
+    <div id="sensor-data">
+        <!-- Sensor data will be displayed here -->
+    </div>
+
+    <script>
+        // Get sensor data passed from Flask route
+        var sensorData = {{ sensor_data | tojson }};
+
+        // Display sensor data dynamically
+        var sensorDiv = document.getElementById("sensor-data");
+        for (var key in sensorData) {
+            if (sensorData.hasOwnProperty(key)) {
+                var sensorValue = sensorData[key];
+                var sensorElement = document.createElement("p");
+                sensorElement.textContent = key + ": " + sensorValue;
+                sensorDiv.appendChild(sensorElement);
+            }
+        }
+    </script>
+</body>
+</html>
