@@ -54,22 +54,36 @@ const char *host = "192.168.1.111:80";
 const char *path = "/receive_sensor_data";
 char json_data[1000];
 
+extern RTC_HandleTypeDef hrtc;
+
+extern RTC_DateTypeDef sDate;
+extern RTC_TimeTypeDef sTime;
+
+char datetime_str[50];
+char buf[500];
+int data_len = 0;
+int len = 0;
 
 void send_web_request(void) {
-	char buf[1000];
 
-	/* Prepare the first message to send to the server */
+	HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
+	HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
+
+	sprintf(datetime_str,
+			"Date : %02d/%02d/%02d, Time: %02d:%02d:%02d",
+			sDate.Date, sDate.Month, sDate.Year, sTime.Hours, sTime.Minutes,
+			sTime.Seconds);
+
 //    int len = sprintf(buf, "GET /get-time HTTP/1.1\r\nHost: 192.168.1.113:5000\r\nConnection: keep-alive\r\n\r\n", counter);
 //    int len = sprintf(buf, "POST /receive_sensor_data HTTP/1.1\r\nHost: 192.168.1.113:5000\r\nContent-Type: application/json\r\n", counter);
 
+	data_len = sprintf(json_data, "{\"/web_page_data\": \"%s\"}", datetime_str);
 
-	int content_length = sprintf(json_data, "{\"sensor-value\": \"%d\"}", counter);
-
-	int len = sprintf(buf, "POST %s HTTP/1.1\r\n"
+	len = sprintf(buf, "POST %s HTTP/1.1\r\n"
 			"Host: %s\r\n"
 			"Content-Type: application/json\r\n"
 			"Content-Length: %d\r\n\r\n"
-			"%s", path, host, content_length, json_data);
+			"%s", path, host, data_len, json_data);
 	/* allocate pbuf */
 	esTx->p = pbuf_alloc(PBUF_TRANSPORT, len, PBUF_POOL);
 
@@ -194,7 +208,7 @@ static err_t tcp_client_recv(void *arg, struct tcp_pcb *tpcb, struct pbuf *p,
 
 		// tcp_sent has already been initialized in the beginning.
 //    /* initialize LwIP tcp_sent callback function */
-//    tcp_sent(tpcb, tcp_client_sent);
+		tcp_sent(tpcb, tcp_client_sent);
 
 		/* Acknowledge the received data */
 		tcp_recved(tpcb, p->tot_len);
