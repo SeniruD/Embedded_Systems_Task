@@ -27,17 +27,7 @@ def send_timing_details_to_stm32(timing_details):
         print("Error sending timing details to STM32:", e)
 
 
-
-@app.route("/get-user/<user_id>")
-def get_user(user_id):
-    user_data = {"id": user_id, "name": "John Doe"}
-    extra = request.args.get("extra")
-    if extra:
-        user_data["extra"] = extra
-        
-    return jsonify(user_data),200
-
-@app.route("/get-time")
+@app.route('/get-time')
 def get_timing_details():
     current_time = datetime.now()
     formatted_time = current_time.strftime("[%d/%b/%Y %H:%M:%S]")
@@ -50,9 +40,9 @@ def receive_sensor_data():
     global sensor_data
     sensor_data = request.json  # Get the JSON data from the POST request
     print("Received Sensor Data:", sensor_data)
-    return jsonify(sensor_data), 201
+    return jsonify(sensor_data)
 
-@app.route("/")
+@app.route('/')
 def index():
     global sensor_data
     return render_template("index.html", sensor_data=sensor_data)
