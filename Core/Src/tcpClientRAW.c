@@ -52,7 +52,7 @@ struct tcp_client_struct *esTx = 0;
 struct tcp_pcb *pcbTx = 0;
 
 const char *host = "192.168.1.111:80";
-const char *path = "/receive_sensor_data";
+const char *path = "/webpage_request";
 char json_data[1000];
 
 extern RTC_HandleTypeDef hrtc;

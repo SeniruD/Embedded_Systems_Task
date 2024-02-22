@@ -3,26 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sensor Data</title>
+    <title>LED Controller Status</title>
 </head>
 <body>
-    <h1>Sensor Data</h1>
-    <div id="sensor-data">
-        <!-- Sensor data will be displayed here -->
+    <h1>LED Controller Status</h1>
+    <div id="webpage-data">
     </div>
 
     <script>
-        // Get sensor data passed from Flask route
-        var sensorData = {{ sensor_data | tojson }};
+        // Get webpage data passed from Flask route
+        var webpageData = {{ webpage_data | tojson }};
 
-        // Display sensor data dynamically
-        var sensorDiv = document.getElementById("sensor-data");
-        for (var key in sensorData) {
-            if (sensorData.hasOwnProperty(key)) {
-                var sensorValue = sensorData[key];
-                var sensorElement = document.createElement("p");
-                sensorElement.textContent = key + ": " + sensorValue;
-                sensorDiv.appendChild(sensorElement);
+        // Display webpage data dynamically
+        var webpageDiv = document.getElementById("webpage-data");
+        for (var key in webpageData) {
+            if (webpageData.hasOwnProperty(key)) {
+                var webpageValue = webpageData[key];
+                var webpageElement = document.createElement("p");
+                webpageElement.textContent = key + ": " + webpageValue;
+                webpageDiv.appendChild(webpageElement);
             }
         }
     </script>
