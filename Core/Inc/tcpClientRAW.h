@@ -10,5 +10,6 @@
 #define INC_TCPCLIENTRAW_H_
 
 void tcp_client_init(void);
+void send_web_request_to_server(void);
 
 #endif /* INC_TCPCLIENTRAW_H_ */

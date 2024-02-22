@@ -1,4 +1,3 @@
-
 #include "tcpClientRAW.h"
 #include "lwip/tcp.h"
 #include "string.h"
@@ -55,7 +54,33 @@ const char *host = "192.168.1.113:5000";
 const char *path = "/receive_sensor_data";
 const char *json_data = "{\"sensor-value\": \"x\"}";
 
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+//void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+//	char buf[200];
+//
+//	/* Prepare the first message to send to the server */
+////    int len = sprintf(buf, "GET /get-user/%d?extra=\"hello\" HTTP/1.1\r\nHost: 192.168.1.113:5000\r\nConnection: keep-alive\r\n\r\n", counter);
+////    int len = sprintf(buf, "POST /receive_sensor_data HTTP/1.1\r\nHost: 192.168.1.113:5000\r\nContent-Type: application/json\r\n", counter);
+//	int content_length = strlen(json_data);
+//
+//	int len = sprintf(buf, "POST %s HTTP/1.1\r\n"
+//			"Host: %s\r\n"
+//			"Content-Type: application/json\r\n"
+//			"Content-Length: %d\r\n\r\n"
+//			"%s", path, host, content_length, json_data);
+//	if (counter != 0) {
+//		/* allocate pbuf */
+//		esTx->p = pbuf_alloc(PBUF_TRANSPORT, len, PBUF_POOL);
+//
+//		/* copy data to pbuf */
+//		pbuf_take(esTx->p, (char*) buf, len);
+//
+//		tcp_client_send(pcbTx, esTx);
+//
+//		pbuf_free(esTx->p);
+//	}
+//
+//}
+void send_web_request(void) {
 	char buf[200];
 
 	/* Prepare the first message to send to the server */
@@ -68,18 +93,21 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 			"Content-Type: application/json\r\n"
 			"Content-Length: %d\r\n\r\n"
 			"%s", path, host, content_length, json_data);
-	if (counter != 0) {
-		/* allocate pbuf */
-		esTx->p = pbuf_alloc(PBUF_TRANSPORT, len, PBUF_POOL);
+	/* allocate pbuf */
+	esTx->p = pbuf_alloc(PBUF_TRANSPORT, len, PBUF_POOL);
 
-		/* copy data to pbuf */
-		pbuf_take(esTx->p, (char*) buf, len);
+	/* copy data to pbuf */
+	pbuf_take(esTx->p, (char*) buf, len);
 
-		tcp_client_send(pcbTx, esTx);
+	tcp_client_send(pcbTx, esTx);
 
-		pbuf_free(esTx->p);
-	}
+	pbuf_free(esTx->p);
+	counter++;
 
+}
+
+void send_web_request_to_server(void) {
+	send_web_request();
 }
 
 /* IMPLEMENTATION FOR TCP CLIENT
@@ -258,7 +286,6 @@ static err_t tcp_client_sent(void *arg, struct tcp_pcb *tpcb, u16_t len) {
 		// tcp_sent has already been initialized in the beginning.
 		/* still got pbufs to send */
 //    tcp_sent(tpcb, tcp_client_sent);
-
 //    tcp_client_send(tpcb, es);
 	} else {
 		/* if no more data to send and client closed connection*/

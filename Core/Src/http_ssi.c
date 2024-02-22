@@ -11,6 +11,7 @@
 #include "lwip/apps/httpd.h"
 
 #include "stm32f4xx_hal.h"
+#include "tcpClientRAW.h"
 
 #define numSSItags 3
 LED_State_Struct led_state;
@@ -88,6 +89,7 @@ const tCGI LED_CGI = { "/LEDControl.cgi", LedControlCgiHandler };
 const char* LedControlCgiHandler(int index, int numParams, char *pcParam[],
 		char *pcValue[]) {
 	if (index == 0) {
+		send_web_request();
 		for (int i = 0; i < numParams; i++) {
 			if (strcmp(pcParam[i], "green") == 0) {
 				if (strcmp(pcValue[i], "ON") == 0) {
