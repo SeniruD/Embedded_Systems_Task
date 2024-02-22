@@ -1,12 +1,12 @@
 /*
- * http_ssi.h
+ * http_server.h
  *
  *  Created on: Feb 21, 2024
  *      Author: SENIRU
  */
 
-#ifndef INC_HTTP_SSI_H_
-#define INC_HTTP_SSI_H_
+#ifndef INC_HTTP_SERVER_H_
+#define INC_HTTP_SERVER_H_
 
 #include "stdbool.h"
 #include "string.h"
@@ -22,4 +22,4 @@ typedef struct {
 
 extern LED_State_Struct led_state;
 
-#endif /* INC_HTTP_SSI_H_ */
+#endif /* INC_HTTP_SERVER_H_ */

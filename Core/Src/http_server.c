@@ -5,8 +5,7 @@
  *      Author: controllerstech
  */
 
-#include"http_ssi.h"
-
+#include "http_server.h"
 #include "lwip/tcp.h"
 #include "lwip/apps/httpd.h"
 
@@ -116,7 +115,7 @@ const char* LedControlCgiHandler(int index, int numParams, char *pcParam[],
 				}
 			}
 		}
-		send_web_request();
+		send_web_request_to_server();
 	}
 
 	return "/index.shtml";

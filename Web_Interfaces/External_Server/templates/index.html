@@ -1,16 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+        body{
+        font-family: Poppins;
+        font-size:30px;
+        background-size: cover;
+       }
+      .wd{
+          height: 100vh;
+          /* background:  url('	https://radsecurity.com/wp-content/uploads/2020/07/rad-logo-aitx-full-text-300x99-1.png'); */
+          background-repeat: no-repeat;
+          background-position-x: center;
+          padding: 100px;
+      }
+      .wd h1{
+          text-align: center;
+      }
+      #webpage-data {
+            text-align: center;
+        }
+        #sync-button {
+            display: block;
+            margin: 0 auto; 
+            margin-top: 20px; 
+            padding: 10px 20px; 
+            font-size: 20px; 
+            background-color: #007bff; 
+            color: #fff; 
+            border: none; 
+            cursor: pointer; 
+            border-radius: 5px; 
+        }
+
+        #sync-button:hover {
+            background-color: #0056b3; /* Change background color on hover */
+        }
+    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LED Controller Status</title>
+
 </head>
 <body>
+    <div class="wd">
     <h1>LED Controller Status</h1>
     <div id="webpage-data">
     </div>
 
+    <!-- "SYNC TIME" button -->
+    <button id="sync-button" onclick="syncTime()">SYNC TIME</button>
+
     <script>
+        function syncTime() {
+            // Make an AJAX request to trigger the send_timing_details_to_stm32 function
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/get-time", true);
+            xhr.onload = function () {
+                if (xhr.status == 200) {
+                    alert("Time details sent to STM32 successfully!");
+                } else {
+                    alert("Failed to send time details to STM32.");
+                }
+            };
+            xhr.send();
+        }
 
         // Get webpage data passed from Flask route
         var webpageData = {{ webpage_data | tojson }};
@@ -26,5 +80,6 @@
             }
         }
     </script>
+    </div>
 </body>
 </html>

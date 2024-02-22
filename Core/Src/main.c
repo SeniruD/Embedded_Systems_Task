@@ -17,13 +17,13 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
+#include "http_server.h"
 #include "main.h"
 #include "lwip.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "lwip/apps/httpd.h"
-#include "http_ssi.h"
 #include "tcpClientRAW.h"
 //#include "http_client.h"
 /* USER CODE END Includes */
