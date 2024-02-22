@@ -1,0 +1,61 @@
+<html>
+<head>
+   <style>
+       body{
+        font-family: Poppins;
+        font-size:30px;
+        background-size: cover;
+       }
+      .wd{
+          height: 100vh;
+          /* background:  url('	https://radsecurity.com/wp-content/uploads/2020/07/rad-logo-aitx-full-text-300x99-1.png'); */
+          background-repeat: no-repeat;
+          background-position-x: center;
+          padding: 100px;
+      }
+      .wd h1{
+          text-align: center;
+      }
+      form {
+        padding: 10px 10px;
+        text-align: center;
+      }
+      .green {
+        color: #0dba00;
+      }
+      .blue {
+        color: #168ccb;
+      }
+      .red {
+        color: #cd0202;
+      }
+  </style>
+</head>
+<body>
+  <div class="wd">
+    <h1>LED CONTROLLER</h1>
+    <form action="LEDControl.cgi" method="get">
+    <div class="green">
+      Green LED <select name="green" size=1>
+      <!--#tag1-->
+      </select>
+    </div>
+    <div class="blue">
+      Blue LED <select name="blue" size=1>
+      <!--#tag2-->
+    </select>
+    </div>
+    <div class="red">
+      Red LED <select name="red" size=1>
+      <!--#tag3-->
+    </select>
+      <br>
+    </div>
+      <br>
+      <input value="Send" type="submit">
+    </div>
+    </form>
+  </div>
+</body>
+
+</html>

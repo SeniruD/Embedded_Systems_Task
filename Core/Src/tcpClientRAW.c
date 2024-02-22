@@ -60,7 +60,7 @@ extern LED_State_Struct led_state;
 
 char datetime_str[50];
 char led_state_str[30];
-char buf[500];
+char buf[1500];
 int data_len = 0;
 int len = 0;
 
@@ -86,13 +86,13 @@ void send_web_request(void) {
 
 	/* Get the current LED state */
 
-	sprintf(led_state_str, "Gled:%s Bled:%s Rled:%s",
+	sprintf(led_state_str, "G_LED:%s B_LED:%s R_LED:%s",
 			led_state_to_string(led_state.green),
 			led_state_to_string(led_state.blue),
 			led_state_to_string(led_state.red));
 
 	data_len = sprintf(json_data,
-			"{\"LATEST CHANGE\": \"%s\",\"LED_STATES\" : \"%s\"}", datetime_str, led_state_str);
+			"{\"LAST CHANGE\": \"%s\",\"LED_STATES\" : \"%s\"}", datetime_str, led_state_str);
 	len = sprintf(buf, "POST %s HTTP/1.1\r\n"
 			"Host: %s\r\n"
 			"Content-Type: application/json\r\n"
@@ -122,14 +122,14 @@ void send_web_request_to_server(void) {
  */
 
 void tcp_client_init(void) {
+  
 	/* 1. create new tcp pcb */
 	struct tcp_pcb *tpcb;
-
 	tpcb = tcp_new();
 
 	/* 2. Connect to the server */
 	ip_addr_t destIPADDR;
-	IP_ADDR4(&destIPADDR, 192, 168, 1, 113);
+	IP_ADDR4(&destIPADDR, 192, 168, 1, 113); // IP address of the server
 	tcp_connect(tpcb, &destIPADDR, 5000, tcp_client_connected);
 }
 
@@ -348,10 +348,10 @@ static void tcp_client_send(struct tcp_pcb *tpcb, struct tcp_client_struct *es)
 
     if (wr_err == ERR_OK)
     {
-      u16_t plen;
+//      u16_t plen;
       u8_t freed;
 
-      plen = ptr->len;
+//      plen = ptr->len;
 
       /* continue with next pbuf in chain (if any) */
       es->p = ptr->next;
@@ -410,11 +410,11 @@ static void tcp_client_connection_close(struct tcp_pcb *tpcb, struct tcp_client_
 static void tcp_client_handle (struct tcp_pcb *tpcb, struct tcp_client_struct *es)
 {
 	/* get the Remote IP */
-	ip4_addr_t inIP = tpcb->remote_ip;
-	uint16_t inPort = tpcb->remote_port;
+	// ip4_addr_t inIP = tpcb->remote_ip;
+//	uint16_t inPort = tpcb->remote_port;
 
 	/* Extract the IP */
-	char *remIP = ipaddr_ntoa(&inIP);
+	// char *remIP = ipaddr_ntoa(&inIP);
 
 //	esTx->state = es->state;
 //	esTx->pcb = es->pcb;

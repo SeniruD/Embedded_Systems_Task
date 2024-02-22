@@ -18,8 +18,6 @@ def send_timing_details_to_stm32(timing_details):
         # Connect to the STM32 MCU
         stm32_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         stm32_socket.connect((STM32_IP_ADDRESS, STM32_PORT))
-
-        # Encode the data as UTF-8 and send it to the STM32
         stm32_socket.send(timing_details_str.encode())
         stm32_socket.close()
 
@@ -29,9 +27,11 @@ def send_timing_details_to_stm32(timing_details):
 
 @app.route('/get-time')
 def get_timing_details():
+
+    # Get the current time and format it
     current_time = datetime.now()
-    formatted_time = current_time.strftime("[%d/%b/%Y %H:%M:%S]")
-    timing_details = {"date": formatted_time} # create a dictonart with time details
+    formatted_time = current_time.strftime("[%d/%m/%Y %H:%M:%S]")
+    timing_details = {"date": formatted_time} 
     send_timing_details_to_stm32(timing_details)
     return jsonify({"message": "Timing details received and sent to STM32"})
 
@@ -49,6 +49,6 @@ def index():
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000,
-    debug=True,
-    threaded=True)
+    debug=True)
+
 
