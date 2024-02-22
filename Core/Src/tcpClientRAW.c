@@ -1,6 +1,7 @@
 #include "tcpClientRAW.h"
 #include "lwip/tcp.h"
 #include "string.h"
+#include "http_ssi.h"
 
 /*  protocol states */
 enum tcp_client_states {
@@ -59,12 +60,25 @@ extern RTC_HandleTypeDef hrtc;
 extern RTC_DateTypeDef sDate;
 extern RTC_TimeTypeDef sTime;
 
+extern LED_State_Struct led_state;
+
 char datetime_str[50];
+char led_state_str[30];
 char buf[500];
 int data_len = 0;
 int len = 0;
 
+char* led_state_to_string(bool value) {
+	if (value == true) {
+		return "ON";
+	} else {
+		return "OFF";
+	}
+}
+
 void send_web_request(void) {
+
+	/* Get the current time and date */
 
 	HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
 	HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
@@ -74,11 +88,15 @@ void send_web_request(void) {
 			sDate.Date, sDate.Month, sDate.Year, sTime.Hours, sTime.Minutes,
 			sTime.Seconds);
 
-//    int len = sprintf(buf, "GET /get-time HTTP/1.1\r\nHost: 192.168.1.113:5000\r\nConnection: keep-alive\r\n\r\n", counter);
-//    int len = sprintf(buf, "POST /receive_sensor_data HTTP/1.1\r\nHost: 192.168.1.113:5000\r\nContent-Type: application/json\r\n", counter);
+	/* Get the current LED state */
 
-	data_len = sprintf(json_data, "{\"/web_page_data\": \"%s\"}", datetime_str);
+	sprintf(led_state_str, "Gled:%s Bled:%s Rled:%s",
+			led_state_to_string(led_state.green),
+			led_state_to_string(led_state.blue),
+			led_state_to_string(led_state.red));
 
+	data_len = sprintf(json_data,
+			"{\"DATE\": \"%s\",\"LED_STATES\" : \"%s\"}", datetime_str, led_state_str);
 	len = sprintf(buf, "POST %s HTTP/1.1\r\n"
 			"Host: %s\r\n"
 			"Content-Type: application/json\r\n"
